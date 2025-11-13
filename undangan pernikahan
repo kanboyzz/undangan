@@ -1,0 +1,179 @@
+<!doctype html>
+
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Undangan Pernikahan - Susanto & Dewi</title>
+  <style>
+    :root{--bg:#f7f7f9;--card:#fff;--accent:#6b8e23;--muted:#6b6b6b}
+    *{box-sizing:border-box}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; margin:0;background:linear-gradient(180deg,#f7f7f9, #ffffff);color:#222}
+    .container{max-width:900px;margin:28px auto;padding:20px}
+    header{display:flex;gap:16px;align-items:center}
+    .brand{display:flex;flex-direction:column}
+    h1{margin:0;font-size:1.4rem}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 20px rgba(30,30,30,0.06);margin-top:16px}
+    .flex{display:flex;gap:18px}
+    .left{flex:1;min-width:260px}
+    .right{flex:1}
+    .meta{font-size:0.95rem;margin-bottom:8px}
+    .venue{font-weight:600}
+    .time{color:var(--muted)}
+    .map-wrap{height:300px;border-radius:8px;overflow:hidden}
+    iframe{width:100%;height:100%;border:0}
+    .actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    button, .btn{background:var(--accent);color:white;border:0;padding:10px 12px;border-radius:8px;cursor:pointer}
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid #e6e6e6}
+    label{display:block;margin-top:10px;font-size:0.9rem}
+    input[type=text], input[type=tel]{width:100%;padding:8px;border-radius:8px;border:1px solid #ddd}
+    .note{font-size:0.9rem;color:var(--muted);margin-top:8px}
+    footer{margin-top:22px;text-align:center;color:#666;font-size:0.9rem}
+    @media (max-width:760px){.flex{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#fff,#eef4e0);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)">S&D</div>
+      <div class="brand">
+        <h1>Undangan Pernikahan — Susanto & Dewi</h1>
+      </div>
+    </header><section class="card">
+  <div class="meta">Dengan hormat, kami mengundang Anda untuk hadir pada acara pernikahan:</div>
+  <div style="font-size:1.05rem;font-weight:700">Nama mempelai: <span style="color:var(--accent)">Susanto & Dewi</span></div>
+
+  <div style="margin-top:10px">
+    <div class="meta"><strong>Orang tua dari Susanto:</strong> Tn. THO BIAW PHIN & Ny. ANG BIE JAN</div>
+    <div class="meta"><strong>Orang tua dari Dewi:</strong> Alm. OEN KIM SUN & Almh. SUKARTI</div>
+  </div>
+
+  <div style="display:flex;gap:14px;margin-top:14px;flex-wrap:wrap">
+    <div class="card" style="flex:1;min-width:240px">
+      <div class="venue">Pemberkatan — VIHARA NIRMALA</div>
+      <div class="time">Tanggal: 07 Desember 2025<br>Waktu: 12.00 - selesai</div>
+
+      <div style="margin-top:10px">
+        <div class="map-wrap" id="map1">
+          <!-- Google Maps embedded using query parameter -->
+          <iframe id="iframeMap1" loading="lazy"
+            src="https://www.google.com/maps?q=Vihara+Nirmala&output=embed"></iframe>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="reserve('pemberkatan')">Reservasi via WhatsApp</button>
+          <button class="btn secondary" onclick="openMaps('Vihara Nirmala')">Buka di Maps</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="flex:1;min-width:240px">
+      <div class="venue">Resepsi — PAKONS PRIME HOTEL</div>
+      <div class="time">Tanggal: 07 Desember 2025<br>Waktu: 18.00 - 20.00</div>
+
+      <div style="margin-top:10px">
+        <div class="map-wrap" id="map2">
+          <iframe id="iframeMap2" loading="lazy"
+            src="https://www.google.com/maps?q=Pakons+Prime+Hotel&output=embed"></iframe>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="reserve('resepsi')">Reservasi via WhatsApp</button>
+          <button class="btn secondary" onclick="openMaps('Pakons Prime Hotel')">Buka di Maps</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px">
+    <label for="phone">Nomor WhatsApp penerima undangan (host/panitia) — masukkan tanpa tanda +</label>
+    <input id="phone" type="tel" placeholder="contoh: 6281234567890" />
+    <div class="note">Nomor ini akan dipakai untuk mengirim pesan reservasi. Jika kosong, tombol WhatsApp akan membuka pesan dengan teks yang dapat disalin manual.</div>
+
+    <label for="guestName">Nama tamu</label>
+    <input id="guestName" type="text" placeholder="Nama Anda" />
+
+    <div style="margin-top:12px" class="actions">
+      <button class="btn" onclick="saveSettings()">Simpan Nomor & Nama</button>
+      <button class="btn secondary" onclick="copyInvite()">Salin Teks Undangan</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <small>Terima kasih atas kehadiran dan doanya. Mohon konfirmasi kehadiran melalui tombol Reservasi.</small>
+</footer>
+
+  </div>  <script>
+    function enc(s){return encodeURIComponent(s)}
+
+    function getSettings(){
+      return {
+        phone: localStorage.getItem('invite_phone')||'',
+        name: localStorage.getItem('invite_name')||''
+      }
+    }
+    function saveSettings(){
+      const phone = document.getElementById('phone').value.trim();
+      const name = document.getElementById('guestName').value.trim();
+      localStorage.setItem('invite_phone', phone);
+      localStorage.setItem('invite_name', name);
+      alert('Tersimpan! Nomor dan nama akan dipakai untuk pesan WhatsApp.');
+    }
+    (function(){
+      const s = getSettings();
+      if(s.phone) document.getElementById('phone').value = s.phone;
+      if(s.name) document.getElementById('guestName').value = s.name;
+    })();
+
+    function openMaps(query){
+      const url = 'https://www.google.com/maps/search/?api=1&query='+enc(query);
+      window.open(url, '_blank');
+    }
+
+    function buildMessage(type){
+      const s = getSettings();
+      const guest = s.name || '[Nama tamu]';
+      let lines = [];
+      lines.push('Halo, saya %s ingin konfirmasi kehadiran untuk undangan pernikahan.');
+      if(type === 'pemberkatan'){
+        lines.push('Acara: Pemberkatan (Vihara Nirmala)');
+        lines.push('Tanggal: 07 Desember 2025');
+        lines.push('Waktu: 12.00 - selesai');
+      } else {
+        lines.push('Acara: Resepsi (Pakons Prime Hotel)');
+        lines.push('Tanggal: 07 Desember 2025');
+        lines.push('Waktu: 18.00 - 20.00');
+      }
+      lines.push('Nama mempelai: Susanto & Dewi');
+      lines.push('Ortu Susanto: Tn. THO BIAW PHIN & Ny. ANG BIE JAN');
+      lines.push('Ortu Dewi: Alm. OEN KIM SUN & Almh. SUKARTI');
+      lines.push('\nMohon konfirmasi: (Hadir / Tidak Hadir)\nJumlah tamu: ');
+
+      const templ = lines.join('\n');
+      const filled = templ.replace('%s', guest);
+      return filled;
+    }
+
+    function reserve(type){
+      const s = getSettings();
+      const phone = s.phone;
+      const text = buildMessage(type);
+      const encoded = enc(text);
+      if(phone){
+        const wa = 'https://wa.me/'+phone+'?text='+encoded;
+        window.open(wa, '_blank');
+      } else {
+        const wa = 'https://wa.me/?text='+encoded;
+        window.open(wa, '_blank');
+      }
+    }
+
+    function copyInvite(){
+      const text = 'Undangan Pernikahan - Susanto & Dewi\n\n' +
+        'Pemberkatan: Vihara Nirmala, 07 Desember 2025, 12.00 - selesai\n' +
+        'Resepsi: Pakons Prime Hotel, 07 Desember 2025, 18.00 - 20.00\n\n' +
+        'Ortu Susanto: Tn. THO BIAW PHIN & Ny. ANG BIE JAN\n' +
+        'Ortu Dewi: Alm. OEN KIM SUN & Almh. SUKARTI\n\n' +
+        'Mohon konfirmasi kehadiran via WhatsApp.\n';
+      navigator.clipboard?.writeText(text).then(()=>{alert('Teks undangan disalin ke clipboard!')}).catch(()=>{prompt('Salin teks undangan berikut:', text)});
+    }
+  </script></body>
+</html>
